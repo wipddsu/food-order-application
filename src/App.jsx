@@ -32,14 +32,22 @@ function App() {
     fetchMeals();
   }, []);
 
-  function handleAddToCart(e, select) {
+  function handleAddToCart(select) {
     const selectedMeal = meals.filter((meal) => meal.id === select.id);
     setCart((prevCart) => [...prevCart, ...selectedMeal]);
   }
 
+  function handleRemoveFromCart(select) {
+    const index = cart.findIndex((item) => item.id === select.id);
+    const cartCopy = [...cart];
+    const updateCart = cartCopy.splice(index, 1);
+
+    setCart(cartCopy);
+  }
+
   return (
     <>
-      <Cart cart={cart} />
+      <Cart cart={cart} onPlusMeal={handleAddToCart} onMinusMeal={handleRemoveFromCart} />
       <Header cart={cart} />
       {error && <p>An error ocurred! {error.message}</p>}
       {!error && <Main meals={meals} onAddToCart={handleAddToCart} />}

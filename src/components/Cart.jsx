@@ -1,6 +1,6 @@
 import Modal from './layouts/Modal';
 
-export default function Cart({ cart }) {
+export default function Cart({ cart, onPlusMeal, onMinusMeal }) {
   let totalPrice;
 
   const allMeals =
@@ -19,7 +19,6 @@ export default function Cart({ cart }) {
     // 중복 데이터 전처리 후 장바구니 총 가격 계산
     function calcTotalPrice() {
       const mealsPrices = allMeals.map((item) => +item.price * item.num);
-      console.log(mealsPrices);
       const total = mealsPrices.reduce((acc, cur) => acc + cur, 0);
 
       return total.toFixed(2);
@@ -36,9 +35,9 @@ export default function Cart({ cart }) {
             <li className="cart-item" key={item.id}>
               <p>{item.name}</p>
               <div className="cart-item-actions">
-                <button>-</button>
+                <button onClick={() => onMinusMeal(item)}>-</button>
                 {item.num}
-                <button>+</button>
+                <button onClick={() => onPlusMeal(item)}>+</button>
               </div>
             </li>
           ))}

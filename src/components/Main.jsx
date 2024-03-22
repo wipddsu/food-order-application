@@ -9,7 +9,7 @@ export default function Main({ meals, onAddToCart }) {
             <div>
               <span className="meal-item-price">{meal.price}</span>
               <p className="meal-item-description">{meal.description}</p>
-              <button className="meal-item-actions button" onClick={(e) => onAddToCart(e, meal)}>
+              <button className="meal-item-actions button" onClick={() => onAddToCart(meal)}>
                 Add to Cart
               </button>
             </div>
