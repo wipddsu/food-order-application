@@ -39,7 +39,7 @@ function App() {
 
   return (
     <>
-      {/* <Cart /> */}
+      <Cart cart={cart} />
       <Header cart={cart} />
       {error && <p>An error ocurred! {error.message}</p>}
       {!error && <Main meals={meals} onAddToCart={handleAddToCart} />}
