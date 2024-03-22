@@ -1,4 +1,4 @@
-export default function Main({ meals }) {
+export default function Main({ meals, onAddToCart }) {
   return (
     <main id="meals">
       {meals.map((meal) => (
@@ -9,7 +9,9 @@ export default function Main({ meals }) {
             <div>
               <span className="meal-item-price">{meal.price}</span>
               <p className="meal-item-description">{meal.description}</p>
-              <button className="meal-item-actions button">Add to Cart</button>
+              <button className="meal-item-actions button" onClick={(e) => onAddToCart(e, meal)}>
+                Add to Cart
+              </button>
             </div>
           </article>
         </div>

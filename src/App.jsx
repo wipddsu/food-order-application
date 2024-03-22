@@ -32,14 +32,17 @@ function App() {
     fetchMeals();
   }, []);
 
-  console.log(error);
+  function handleAddToCart(e, select) {
+    const selectedMeal = meals.filter((meal) => meal.id === select.id);
+    setCart((prevCart) => [...prevCart, ...selectedMeal]);
+  }
 
   return (
     <>
       {/* <Cart /> */}
-      <Header />
+      <Header cart={cart} />
       {error && <p>An error ocurred! {error.message}</p>}
-      {!error && <Main meals={meals} />}
+      {!error && <Main meals={meals} onAddToCart={handleAddToCart} />}
     </>
   );
 }
