@@ -1,9 +1,30 @@
+import { useEffect, useState } from 'react';
+import Header from './components/Header';
+import Main from './components/Main';
+import Modal from './components/layouts/Modal';
+import Cart from './components/Cart';
+import Checkout from './components/Checkout';
+
 function App() {
+  const [meals, setMeals] = useState([]);
+
+  useEffect(() => {
+    async function fetchMeals() {
+      const response = await fetch('http://localhost:3000/meals');
+      const data = await response.json();
+
+      setMeals(data);
+    }
+
+    fetchMeals();
+  }, []);
+
+  console.log(meals);
+
   return (
     <>
-      <h1>You got this 💪</h1>
-      <p>Stuck? Not sure how to proceed?</p>
-      <p>Don't worry - we've all been there. Let's build it together!</p>
+      <Header />
+      <Main meals={meals} />
     </>
   );
 }
