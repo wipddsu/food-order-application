@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react';
 import Header from './components/Header';
 import Main from './components/Main';
-import Cart from './components/Cart';
-import Checkout from './components/Checkout';
 
 function App() {
   const [isFetching, setIsFetching] = useState();
@@ -34,21 +32,21 @@ function App() {
 
   function handleAddToCart(select) {
     const selectedMeal = meals.filter((meal) => meal.id === select.id);
+
     setCart((prevCart) => [...prevCart, ...selectedMeal]);
   }
 
   function handleRemoveFromCart(select) {
     const index = cart.findIndex((item) => item.id === select.id);
     const cartCopy = [...cart];
-    const updateCart = cartCopy.splice(index, 1);
+    const removedProduct = cartCopy.splice(index, 1);
 
     setCart(cartCopy);
   }
 
   return (
     <>
-      <Cart cart={cart} onPlusMeal={handleAddToCart} onMinusMeal={handleRemoveFromCart} />
-      <Header cart={cart} />
+      <Header cart={cart} onPlusMeal={handleAddToCart} onMinusMeal={handleRemoveFromCart} />
       {error && <p>An error ocurred! {error.message}</p>}
       {!error && <Main meals={meals} onAddToCart={handleAddToCart} />}
     </>

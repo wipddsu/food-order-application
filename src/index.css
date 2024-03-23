@@ -221,6 +221,12 @@ h1 {
   color: #1f1a09;
 }
 
+.button:disabled {
+  background-color: #ffdb64;
+  border: 1px solid #ffdb64;
+  color: #8d762a;
+}
+
 .text-button {
   font: inherit;
   cursor: pointer;

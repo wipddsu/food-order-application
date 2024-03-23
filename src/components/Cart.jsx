@@ -1,53 +1,58 @@
+import { useRef } from 'react';
 import Modal from './layouts/Modal';
+import Checkout from '../components/Checkout';
 
-export default function Cart({ cart, onPlusMeal, onMinusMeal }) {
-  let totalPrice;
+import { openModal, closeModal } from '../utils/modalController';
+import { mealsInCart, calcTotalPrice } from '../utils/cartUtils';
 
-  const allMeals =
-    // 중복 데이터 추출하여 프로퍼티로 중복횟수 추가
-    cart.reduce((acc, curr) => {
-      const foundIndex = acc.findIndex((item) => item.id === curr.id);
-      if (foundIndex === -1) {
-        acc.push({ ...curr, num: 1 });
-      } else {
-        acc[foundIndex].num++;
-      }
-      return acc;
-    }, []) || [];
+export default function Cart({ cart, onPlusMeal, onMinusMeal, onCartClose }) {
+  const dialog = useRef();
 
-  if (cart.length > 0) {
-    // 중복 데이터 전처리 후 장바구니 총 가격 계산
-    function calcTotalPrice() {
-      const mealsPrices = allMeals.map((item) => +item.price * item.num);
-      const total = mealsPrices.reduce((acc, cur) => acc + cur, 0);
+  const allMeals = mealsInCart(cart) || [];
 
-      return total.toFixed(2);
-    }
-    totalPrice = calcTotalPrice();
-  }
+  const totalPrice = cart.length > 0 ? new Intl.NumberFormat().format(calcTotalPrice(allMeals)) : null;
 
   return (
-    <Modal>
+    <>
+      <Modal ref={dialog}>
+        <Checkout totalPrice={totalPrice} totalMeals={allMeals} onCheckoutClose={() => closeModal(dialog)} />
+      </Modal>
       <div className="cart">
         <h2>Your Cart</h2>
-        <ul>
-          {allMeals.map((item) => (
-            <li className="cart-item" key={item.id}>
-              <p>{item.name}</p>
-              <div className="cart-item-actions">
-                <button onClick={() => onMinusMeal(item)}>-</button>
-                {item.num}
-                <button onClick={() => onPlusMeal(item)}>+</button>
-              </div>
-            </li>
-          ))}
-        </ul>
-        <span className="cart-total">$ {totalPrice}</span>
+        {cart.length === 0 && <p>Your cart is currently empty. Please add a meal to your cart.</p>}
+        {cart.length > 0 && (
+          <div>
+            <ul>
+              {allMeals.map((item) => (
+                <li className="cart-item" key={item.id}>
+                  <p>{item.name}</p>
+                  <div className="cart-item-actions">
+                    <button onClick={() => onMinusMeal(item)}>-</button>
+                    {item.total}
+                    <button onClick={() => onPlusMeal(item)}>+</button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+            <span className="cart-total">${totalPrice}</span>
+          </div>
+        )}
         <div className="modal-actions">
-          <button className="text-button">close</button>
-          <button className="button">Go to Checkout</button>
+          <button className="text-button" onClick={onCartClose}>
+            close
+          </button>
+          <button
+            className="button"
+            disabled={cart.length === 0 && true}
+            onClick={() => {
+              onCartClose();
+              openModal(dialog);
+            }}
+          >
+            Go to Checkout
+          </button>
         </div>
       </div>
-    </Modal>
+    </>
   );
 }
