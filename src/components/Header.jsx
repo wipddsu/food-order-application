@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import logo from '../assets/logo.jpg';
 import Cart from './Cart';
-import Modal from './layouts/Modal';
+import Modal from './Modal';
 
 import { openModal, closeModal } from '../utils/modalController';
 

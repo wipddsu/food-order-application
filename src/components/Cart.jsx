@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import Modal from './layouts/Modal';
+import Modal from './Modal';
 import Checkout from '../components/Checkout';
 
 import { openModal, closeModal } from '../utils/modalController';
