@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import Header from './components/Header';
 import Main from './components/Main';
 
+import { CartContext } from './store/CartContext';
+
 function App() {
   const [isFetching, setIsFetching] = useState();
   const [error, setError] = useState();
@@ -44,12 +46,20 @@ function App() {
     setCart(cartCopy);
   }
 
+  function handleResetCart() {
+    setCart([]);
+  }
+
+  const ctxValue = {
+    resetCart: handleResetCart,
+  };
+
   return (
-    <>
+    <CartContext.Provider value={ctxValue}>
       <Header cart={cart} onPlusMeal={handleAddToCart} onMinusMeal={handleRemoveFromCart} />
       {error && <p>An error ocurred! {error.message}</p>}
       {!error && <Main meals={meals} onAddToCart={handleAddToCart} />}
-    </>
+    </CartContext.Provider>
   );
 }
 

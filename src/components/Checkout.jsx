@@ -3,6 +3,7 @@ import Modal from './layouts/Modal';
 import OrderSuccess from './OrderSuccess';
 
 import { openModal, closeModal } from '../utils/modalController';
+import { CartContext } from '../store/CartContext';
 
 export default function Checkout({ totalPrice, totalMeals, onCheckoutClose }) {
   const dialog = useRef();
@@ -81,7 +82,7 @@ export default function Checkout({ totalPrice, totalMeals, onCheckoutClose }) {
           </div>
           {error && <p>{error.message}</p>}
           <div className="modal-actions">
-            <button className="text-button" onClick={onCheckoutClose}>
+            <button type="button" className="text-button" onClick={onCheckoutClose}>
               close
             </button>
             <button
