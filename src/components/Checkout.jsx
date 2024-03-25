@@ -7,11 +7,20 @@ import { calcTotalPrice } from '../utils/cartUtils';
 import { currencyFormatter } from '../utils/formatting';
 import { UserProgressContext } from '../store/UserProgressContext';
 import { CartContext } from '../store/CartContext';
+import useHttp from '../hooks/useHttp';
+
+const requestConfig = {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+};
 
 export default function Checkout() {
   const { progress, hideCheckout } = useContext(UserProgressContext);
   const { items } = useContext(CartContext);
-  const [error, setError] = useState();
+  const totalPrice = items.length > 0 ? currencyFormatter.format(calcTotalPrice(items)) : null;
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -20,54 +29,49 @@ export default function Checkout() {
     city: '',
   });
 
+  const { data, isFetching, error, sendRequest } = useHttp('http://localhost:3000/orders', requestConfig);
+
   async function handleSubmit(e) {
     e.preventDefault();
 
-    try {
-      const response = await fetch('http://localhost:3000/orders', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+    sendRequest(
+      JSON.stringify({
+        order: {
+          customer: formData,
+          items: items,
         },
-        body: JSON.stringify({
-          order: {
-            customer: formData,
-            items: items,
-          },
-        }),
-      });
-      const resData = await response.json();
-
-      if (response.status === 400) {
-        throw new Error(resData.message);
-      }
-
-      if (!response.ok) {
-        throw new Error('An error occurred in fetching!');
-      }
-
-      if (response.status === 201) {
-        hideCheckout();
-        openModal(dialog);
-        setFormData({
-          name: '',
-          email: '',
-          street: '',
-          'postal-code': '',
-          city: '',
-        });
-      }
-    } catch (error) {
-      setError({
-        message: error.message,
-      });
-    }
+      })
+    );
   }
-
-  const totalPrice = items.length > 0 ? currencyFormatter.format(calcTotalPrice(items)) : null;
 
   function handleClose() {
     hideCheckout();
+  }
+
+  let actions = (
+    <>
+      <Button textOnly type="button" onClick={handleClose}>
+        close
+      </Button>
+      <Button>Submit Order</Button>
+    </>
+  );
+
+  if (isFetching) {
+    actions = <p>Sending order data...</p>;
+  }
+
+  if (data && !error) {
+    return (
+      <Modal open={progress === 'checkout'} onClose={handleClose}>
+        <h2>Success!</h2>
+        <p>Your order was submitted successfully</p>
+        <p>We will get back to you with more detail via email within the next few minutes</p>
+        <div className="modal-actions">
+          <Button onClick={handleClose}>Okay</Button>
+        </div>
+      </Modal>
+    );
   }
 
   return (
@@ -119,12 +123,7 @@ export default function Checkout() {
             </Input>
           </div>
           {error && <p>{error.message}</p>}
-          <div className="modal-actions">
-            <Button textOnly type="button" onClick={handleClose}>
-              close
-            </Button>
-            <Button>Submit Order</Button>
-          </div>
+          <div className="modal-actions">{actions}</div>
         </form>
       </div>
     </Modal>
