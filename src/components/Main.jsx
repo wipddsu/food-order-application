@@ -1,36 +1,19 @@
 import { useState, useEffect, useContext } from 'react';
 import Meal from './Meal';
+import useHttp from '../hooks/useHttp';
+
+const requestConfig = {};
 
 export default function Main() {
-  const [isFetching, setIsFetching] = useState();
-  const [error, setError] = useState();
-  const [meals, setMeals] = useState([]);
+  const { data: meals, isFetching, error } = useHttp('http://localhost:3000/meals', requestConfig, []);
 
-  useEffect(() => {
-    async function fetchMeals() {
-      setIsFetching(true);
-
-      try {
-        const response = await fetch('http://localhost:3000/meals');
-        const data = await response.json();
-        setMeals(data);
-
-        if (!response.ok) {
-          throw new Error('Failed to fetch meals');
-        }
-      } catch (error) {
-        setError({ message: error.message || 'Failed to fetch data' });
-      }
-
-      setIsFetching(false);
-    }
-
-    fetchMeals();
-  }, []);
+  if (isFetching) {
+    return <p className="center">Fetching meals...</p>;
+  }
 
   return (
     <main id="meals">
-      {error && <p style={{ textAlign: 'center' }}>An error ocurred! {error.message}</p>}
+      {error && <p className="center">An error ocurred! {error.message}</p>}
       {!error && (
         <>
           {meals.map((meal) => (
