@@ -8,15 +8,15 @@ import { openModal, closeModal } from '../utils/modalController';
 import { CartContext } from '../store/CartContext';
 
 export default function Header() {
-  const { cart, addItem, removeItem } = useContext(CartContext);
+  const { items, addItem, removeItem } = useContext(CartContext);
   const dialog = useRef();
 
-  const totalQuantity = cart.reduce((acc, curr) => acc + curr.total, 0);
+  const totalQuantity = items.reduce((acc, curr) => acc + curr.total, 0);
 
   return (
     <>
       <Modal ref={dialog}>
-        <Cart cart={cart} addItem={addItem} removeItem={removeItem} onCartClose={() => closeModal(dialog)} />
+        <Cart cart={items} addItem={addItem} removeItem={removeItem} onCartClose={() => closeModal(dialog)} />
       </Modal>
       <header id="main-header">
         <h1 id="title">
