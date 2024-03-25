@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 import Modal from './Modal';
 import Checkout from '../components/Checkout';
+import Button from './UI/Button';
 
 import { openModal, closeModal } from '../utils/modalController';
 import { mealsInCart, calcTotalPrice } from '../utils/cartUtils';
@@ -39,11 +40,10 @@ export default function Cart({ cart, onPlusMeal, onMinusMeal, onCartClose }) {
           </div>
         )}
         <div className="modal-actions">
-          <button className="text-button" onClick={onCartClose}>
+          <Button textOnly onClick={onCartClose}>
             close
-          </button>
-          <button
-            className="button"
+          </Button>
+          <Button
             disabled={cart.length === 0 && true}
             onClick={() => {
               onCartClose();
@@ -51,7 +51,7 @@ export default function Cart({ cart, onPlusMeal, onMinusMeal, onCartClose }) {
             }}
           >
             Go to Checkout
-          </button>
+          </Button>
         </div>
       </div>
     </>

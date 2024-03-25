@@ -2,6 +2,7 @@ import { useRef } from 'react';
 import logo from '../assets/logo.jpg';
 import Cart from './Cart';
 import Modal from './Modal';
+import Button from './UI/Button';
 
 import { openModal, closeModal } from '../utils/modalController';
 
@@ -18,9 +19,9 @@ export default function Header({ cart, onPlusMeal, onMinusMeal }) {
           <img src={logo} alt="logo image" />
           REACTFOOD
         </h1>
-        <button className="text-button" onClick={() => openModal(dialog)}>
+        <Button textOnly onClick={() => openModal(dialog)}>
           Cart{cart.length > 0 && `(${cart.length})`}
-        </button>
+        </Button>
       </header>
     </>
   );

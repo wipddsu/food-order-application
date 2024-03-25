@@ -1,3 +1,5 @@
+import Button from './UI/Button';
+
 import { currencyFormatter } from '../utils/formatting';
 
 export default function Main({ meals, onAddToCart }) {
@@ -13,9 +15,9 @@ export default function Main({ meals, onAddToCart }) {
               <p className="meal-item-description">{meal.description}</p>
             </div>
             <p className="meal-item-actions">
-              <button className="button" onClick={() => onAddToCart(meal)}>
+              <Button className="button" onClick={() => onAddToCart(meal)}>
                 Add to Cart
-              </button>
+              </Button>
             </p>
           </article>
         </div>

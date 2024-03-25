@@ -1,9 +1,9 @@
 import { useRef, useState } from 'react';
 import Modal from './Modal';
 import OrderSuccess from './OrderSuccess';
+import Button from './UI/Button';
 
 import { openModal, closeModal } from '../utils/modalController';
-import { currencyFormatter } from '../utils/formatting';
 
 export default function Checkout({ totalPrice, totalMeals, onCheckoutClose }) {
   const dialog = useRef();
@@ -123,10 +123,10 @@ export default function Checkout({ totalPrice, totalMeals, onCheckoutClose }) {
           </div>
           {error && <p>{error.message}</p>}
           <div className="modal-actions">
-            <button type="button" className="text-button" onClick={onCheckoutClose}>
+            <Button textOnly type="button" onClick={onCheckoutClose}>
               close
-            </button>
-            <button className="button">Submit Order</button>
+            </Button>
+            <Button>Submit Order</Button>
           </div>
         </form>
       </div>
