@@ -91,7 +91,9 @@ export default function Checkout({ totalPrice, totalMeals, onCheckoutClose }) {
             type="text"
             value={formData.street}
             onChange={(e) => setFormData({ ...formData, street: e.target.value })}
-          ></Input>
+          >
+            Street
+          </Input>
           <div className="control-row meal-item-actions">
             <Input
               inputName="postal-code"

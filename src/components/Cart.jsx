@@ -4,20 +4,18 @@ import Checkout from '../components/Checkout';
 import Button from './UI/Button';
 
 import { openModal, closeModal } from '../utils/modalController';
-import { mealsInCart, calcTotalPrice } from '../utils/cartUtils';
+import { calcTotalPrice } from '../utils/cartUtils';
 import { currencyFormatter } from '../utils/formatting';
 
-export default function Cart({ cart, onPlusMeal, onMinusMeal, onCartClose }) {
+export default function Cart({ cart, addItem, removeItem, onCartClose }) {
   const dialog = useRef();
 
-  const allMeals = mealsInCart(cart) || [];
-
-  const totalPrice = cart.length > 0 ? currencyFormatter.format(calcTotalPrice(allMeals)) : null;
+  const totalPrice = cart.length > 0 ? currencyFormatter.format(calcTotalPrice(cart)) : null;
 
   return (
     <>
       <Modal ref={dialog}>
-        <Checkout totalPrice={totalPrice} totalMeals={allMeals} onCheckoutClose={() => closeModal(dialog)} />
+        <Checkout totalPrice={totalPrice} totalMeals={cart} onCheckoutClose={() => closeModal(dialog)} />
       </Modal>
       <div className="cart">
         <h2>Your Cart</h2>
@@ -25,13 +23,13 @@ export default function Cart({ cart, onPlusMeal, onMinusMeal, onCartClose }) {
         {cart.length > 0 && (
           <div>
             <ul>
-              {allMeals.map((item) => (
+              {cart.map((item) => (
                 <li className="cart-item" key={item.id}>
                   <p>{item.name}</p>
                   <div className="cart-item-actions">
-                    <button onClick={() => onMinusMeal(item)}>-</button>
+                    <button onClick={() => removeItem(item.id)}>-</button>
                     {item.total}
-                    <button onClick={() => onPlusMeal(item)}>+</button>
+                    <button onClick={() => addItem(item)}>+</button>
                   </div>
                 </li>
               ))}
