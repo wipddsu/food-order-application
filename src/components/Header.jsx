@@ -1,32 +1,30 @@
-import { useContext, useRef } from 'react';
+import { useContext } from 'react';
 import logo from '../assets/logo.jpg';
-import Cart from './Cart';
-import Modal from './Modal';
 import Button from './UI/Button';
 
-import { openModal, closeModal } from '../utils/modalController';
 import { CartContext } from '../store/CartContext';
+import { UserProgressContext } from '../store/UserProgressContext';
 
 export default function Header() {
-  const { items, addItem, removeItem } = useContext(CartContext);
-  const dialog = useRef();
+  const { progress, showCart } = useContext(UserProgressContext);
+  const { items } = useContext(CartContext);
 
   const totalQuantity = items.reduce((acc, curr) => acc + curr.total, 0);
 
+  function handleShowCart() {
+    showCart();
+    console.log(progress);
+  }
+
   return (
-    <>
-      <Modal ref={dialog}>
-        <Cart cart={items} addItem={addItem} removeItem={removeItem} onCartClose={() => closeModal(dialog)} />
-      </Modal>
-      <header id="main-header">
-        <h1 id="title">
-          <img src={logo} alt="logo image" />
-          REACTFOOD
-        </h1>
-        <Button textOnly onClick={() => openModal(dialog)}>
-          Cart({totalQuantity})
-        </Button>
-      </header>
-    </>
+    <header id="main-header">
+      <h1 id="title">
+        <img src={logo} alt="logo image" />
+        REACTFOOD
+      </h1>
+      <Button textOnly onClick={handleShowCart}>
+        Cart({totalQuantity})
+      </Button>
+    </header>
   );
 }

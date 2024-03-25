@@ -1,13 +1,16 @@
-import { useRef, useState } from 'react';
-import Modal from './Modal';
-import OrderSuccess from './OrderSuccess';
+import { useState, useContext } from 'react';
+import Modal from './UI/Modal';
 import Button from './UI/Button';
 import Input from './UI/Input';
 
-import { openModal, closeModal } from '../utils/modalController';
+import { calcTotalPrice } from '../utils/cartUtils';
+import { currencyFormatter } from '../utils/formatting';
+import { UserProgressContext } from '../store/UserProgressContext';
+import { CartContext } from '../store/CartContext';
 
-export default function Checkout({ totalPrice, totalMeals, onCheckoutClose }) {
-  const dialog = useRef();
+export default function Checkout() {
+  const { progress, hideCheckout } = useContext(UserProgressContext);
+  const { items } = useContext(CartContext);
   const [error, setError] = useState();
   const [formData, setFormData] = useState({
     name: '',
@@ -29,7 +32,7 @@ export default function Checkout({ totalPrice, totalMeals, onCheckoutClose }) {
         body: JSON.stringify({
           order: {
             customer: formData,
-            items: totalMeals || [],
+            items: items,
           },
         }),
       });
@@ -44,7 +47,7 @@ export default function Checkout({ totalPrice, totalMeals, onCheckoutClose }) {
       }
 
       if (response.status === 201) {
-        onCheckoutClose();
+        hideCheckout();
         openModal(dialog);
         setFormData({
           name: '',
@@ -61,11 +64,14 @@ export default function Checkout({ totalPrice, totalMeals, onCheckoutClose }) {
     }
   }
 
+  const totalPrice = items.length > 0 ? currencyFormatter.format(calcTotalPrice(items)) : null;
+
+  function handleClose() {
+    hideCheckout();
+  }
+
   return (
-    <>
-      <Modal ref={dialog}>
-        <OrderSuccess onCloseSuccess={() => closeModal(dialog)} />
-      </Modal>
+    <Modal open={progress === 'checkout'} onClose={handleClose}>
       <div>
         <h2>Checkout</h2>
         <p>Total Amount: {totalPrice}</p>
@@ -114,13 +120,13 @@ export default function Checkout({ totalPrice, totalMeals, onCheckoutClose }) {
           </div>
           {error && <p>{error.message}</p>}
           <div className="modal-actions">
-            <Button textOnly type="button" onClick={onCheckoutClose}>
+            <Button textOnly type="button" onClick={handleClose}>
               close
             </Button>
             <Button>Submit Order</Button>
           </div>
         </form>
       </div>
-    </>
+    </Modal>
   );
 }
