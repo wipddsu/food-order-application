@@ -3,6 +3,7 @@ import Modal from './Modal';
 import OrderSuccess from './OrderSuccess';
 
 import { openModal, closeModal } from '../utils/modalController';
+import { currencyFormatter } from '../utils/formatting';
 
 export default function Checkout({ totalPrice, totalMeals, onCheckoutClose }) {
   const dialog = useRef();
@@ -66,7 +67,7 @@ export default function Checkout({ totalPrice, totalMeals, onCheckoutClose }) {
       </Modal>
       <div>
         <h2>Checkout</h2>
-        <p>Total Amount: ${totalPrice}</p>
+        <p>Total Amount: {totalPrice}</p>
         <form onSubmit={handleSubmit}>
           <div className="control">
             <label htmlFor="name">Full Name</label>

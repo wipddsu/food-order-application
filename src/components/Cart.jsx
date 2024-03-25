@@ -4,13 +4,14 @@ import Checkout from '../components/Checkout';
 
 import { openModal, closeModal } from '../utils/modalController';
 import { mealsInCart, calcTotalPrice } from '../utils/cartUtils';
+import { currencyFormatter } from '../utils/formatting';
 
 export default function Cart({ cart, onPlusMeal, onMinusMeal, onCartClose }) {
   const dialog = useRef();
 
   const allMeals = mealsInCart(cart) || [];
 
-  const totalPrice = cart.length > 0 ? new Intl.NumberFormat().format(calcTotalPrice(allMeals)) : null;
+  const totalPrice = cart.length > 0 ? currencyFormatter.format(calcTotalPrice(allMeals)) : null;
 
   return (
     <>
@@ -34,7 +35,7 @@ export default function Cart({ cart, onPlusMeal, onMinusMeal, onCartClose }) {
                 </li>
               ))}
             </ul>
-            <span className="cart-total">${totalPrice}</span>
+            <span className="cart-total">{totalPrice}</span>
           </div>
         )}
         <div className="modal-actions">
