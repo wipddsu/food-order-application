@@ -16,6 +16,10 @@ export default function useHttp(url, config, initialData) {
   const [error, setError] = useState();
   const [data, setData] = useState(initialData);
 
+  function clearData() {
+    setData(initialData);
+  }
+
   const sendRequest = useCallback(
     async function sendRequest(data) {
       setIsFetching(true);
@@ -41,5 +45,6 @@ export default function useHttp(url, config, initialData) {
     isFetching,
     error,
     sendRequest,
+    clearData,
   };
 }

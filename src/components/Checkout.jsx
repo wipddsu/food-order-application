@@ -16,20 +16,22 @@ const requestConfig = {
   },
 };
 
+const initialFormData = {
+  name: '',
+  email: '',
+  street: '',
+  'postal-code': '',
+  city: '',
+};
+
 export default function Checkout() {
   const { progress, hideCheckout } = useContext(UserProgressContext);
-  const { items } = useContext(CartContext);
+  const { items, clearCart } = useContext(CartContext);
   const totalPrice = items.length > 0 ? currencyFormatter.format(calcTotalPrice(items)) : null;
 
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    street: '',
-    'postal-code': '',
-    city: '',
-  });
+  const [formData, setFormData] = useState(initialFormData);
 
-  const { data, isFetching, error, sendRequest } = useHttp('http://localhost:3000/orders', requestConfig);
+  const { data, isFetching, error, sendRequest, clearData } = useHttp('http://localhost:3000/orders', requestConfig);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -48,6 +50,13 @@ export default function Checkout() {
     hideCheckout();
   }
 
+  function handleOrderFinish() {
+    hideCheckout();
+    clearCart();
+    clearData();
+    setFormData(initialFormData);
+  }
+
   let actions = (
     <>
       <Button textOnly type="button" onClick={handleClose}>
@@ -63,12 +72,12 @@ export default function Checkout() {
 
   if (data && !error) {
     return (
-      <Modal open={progress === 'checkout'} onClose={handleClose}>
+      <Modal open={progress === 'checkout'} onClose={handleOrderFinish}>
         <h2>Success!</h2>
         <p>Your order was submitted successfully</p>
         <p>We will get back to you with more detail via email within the next few minutes</p>
         <div className="modal-actions">
-          <Button onClick={handleClose}>Okay</Button>
+          <Button onClick={handleOrderFinish}>Okay</Button>
         </div>
       </Modal>
     );
